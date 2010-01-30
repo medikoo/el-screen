@@ -1,0 +1,74 @@
+my-screen --- Screen manager for Emacs
+
+-------------------------------------------------------------------------------
+1. About
+-------------------------------------------------------------------------------
+
+Switchable screen configurations that persists between sessions.
+
+It has nearly same functionality as elscreen
+http://www.morishima.net/~naoto/software/elscreen/
+Differences are:
+
+- Configurations are saved to files (this way they're kept between sessions)
+
+- There's unlimited number of screen configurations (each has to have
+  distinct name)
+
+- No tab controls (I don't think you need them anyway)
+
+-------------------------------------------------------------------------------
+2. Installation
+-------------------------------------------------------------------------------
+
+- Put `my-elisp' helpers (see my other projects) into folder  named 'my' within
+  your .emacs load path.
+
+- Put `my-screen' folder in same path
+
+- Create '.my' folder within your '.emacs.d' (you may choose different
+  path, then you'll need to override `my-screen-dir' variable)
+
+-------------------------------------------------------------------------------
+3. Usage
+-------------------------------------------------------------------------------
+3.1 Initialization
+-------------------------------------------------------------------------------
+
+(require 'my-screen/my-screen)
+
+If it's first run then you start with screen named "" (empty string) 
+otherwise screen that was previously opened is loaded.
+
+-------------------------------------------------------------------------------
+3.2 Interaction
+-------------------------------------------------------------------------------
+
+Keyboard bindings:
+
+C-z s <name> -- Switch between screens. Current screen is saved, new screen is
+                loaded
+
+C-z r <name> -- Rename current screen.
+
+C-z n -- Print name of current screen
+
+And that's it. Periodical or on exit saving of screens is done automatically.
+
+-------------------------------------------------------------------------------
+3.3 Hooks
+-------------------------------------------------------------------------------
+
+my-screen-init-hook
+  Initialization, may become handy if you want to override some default
+  settings e.g. `my-screen-dir'
+
+my-screen-load-hook
+  Previously created screen is loaded
+
+my-screen-new-hook
+  New screen is created, you may use it to organize your init screen
+  configuration.
+
+my-screen-save-hook
+  Screen is saved

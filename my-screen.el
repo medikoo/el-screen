@@ -1,4 +1,4 @@
-;; my-screen.el --- switchable screen configurations
+;; my-screen.el --- Screen manager for Emacs
 
 ;; Author:	Mariusz Nowak <mariusz+emacs.my-screen@medikoo.com>
 ;; Copyright (C) 2010 Mariusz Nowak <mariusz+emacs.my-screen@medikoo.com>
@@ -14,12 +14,46 @@
 ;; PURPOSE.	 See the GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public
-;; License along with this program; if not, write to the Free
-;; Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-;; MA 02111-1307 USA
+;; License along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+;;
+;; See README.
 
 (require 'my/frame)
 (require 'my/file)
+(require 'my/key)
+
+(defgroup my-screen nil "my-screen -- Screen manager for Emacs")
+
+(defcustom my-screen-default-buffer-name "*scratch*"
+	"*Name of a buffer for new screen or if restore of buffer is not possible."
+	:tag "Name of Default Buffer"
+	:type '(string :size 24)
+	:group 'my-screen)
+
+(defcustom my-screen-dir (concat (getenv "HOME") "/.emacs.d/.my/")
+	"*Path at which configurations are saved."
+	:tag "Configuration files path"
+	:type '(string :size 2048)
+	:group 'my-screen)
+
+(defvar my-screen-map (make-sparse-keymap)
+	"Keymap for my-screen")
+(define-key my-screen-map "s" 'my-screen-switch)
+(define-key my-screen-map "r" 'my-screen-rename)
+(define-key my-screen-map "n" 'my-screen-print-current)
+
+(defcustom my-screen-prefix-key "\C-z"
+	"*Prefix key for my-screen commands."
+	:tag "Prefix key of my-screen"
+	:type '(string :size 10)
+	:set (lambda (symbol value)
+				 (if (boundp 'my-screen-prefix-key)
+					 (my-screen-set-prefix-key value)
+					 (my-key-set value my-screen-map))
+				 (custom-set-default symbol value))
+	:group 'my-screen)
 
 (defvar my-screen-dir
 	(concat (getenv "HOME") "/.emacs.d/.my/")
@@ -37,46 +71,67 @@
 	".myscreen-current"
 	"Filname of file that holds current screen configuration name.")
 
+(defun my-screen-set-prefix-key (key)
+	"Set KEY as prefix for my-screen bindings."
+	(my-key-replace my-screen-prefix-key key my-screen-map)
+	(setq my-screen-prefix-key key))
+
 (defun my-screen-set-name (name)
+	"Set NAME for current screen."
 	(my-file-write
 		(concat my-screen-dir my-screen-current-name-file) name)
 	(setq my-screen-current name))
 
 (defun my-screen-save ()
+	"Save current screen."
 	(my-file-write
 		(concat my-screen-dir
 			my-screen-current my-screen-file-extension)
 		(prin1-to-string (my-frame-serialize)))
+	(run-hooks 'my-screen-save-hook)
 	(message "Screen saved: %S" my-screen-current))
 
 (defun my-screen-save-as (name)
+	"Save current screen under NAME."
 	(my-screen-set-name name)
 	(my-screen-save))
 
 (defun my-screen-new (name)
+	"Prepare new (blank) screen and save as NAME."
 	(delete-other-windows)
-	(set-window-buffer (selected-window) "*scratch*")
-	(my-screen-new-configure)
+	(set-window-buffer (selected-window) my-screen-default-buffer-name)
+	(run-hooks 'my-screen-new-hook)
 	(my-screen-save-as name))
 
-(defun my-screen-new-configure ())
-
 (defun my-screen-load (name)
+	"Load NAME screen."
 	(let ((data (my-file-read (concat my-screen-dir
 						name my-screen-file-extension) t)))
 		(if data
 			(progn
 				(my-frame-unserialize (read data))
-				(my-screen-set-name name))
+				(my-screen-set-name name)
+				(run-hooks 'my-screen-load-hook))
 			(my-screen-new name))
 		(message "Screen loaded: %S" name)))
 
 (defun my-screen-switch (name)
+	"Switch to NAME screen"
 	(interactive "sName: ")
 	(my-screen-save)
 	(my-screen-load name))
 
+(defun my-screen-rename (name)
+	"Rename current screen to NAME."
+	(interactive "sNew name: ")
+	(rename-file
+		(concat my-screen-dir my-screen-current my-screen-file-extension)
+		(concat my-screen-dir name my-screen-file-extension))
+	(my-screen-set-name name))
+
 (defun my-screen-init ()
+	"Initialize. Load screen that was current on exit. Add save hooks."
+	(run-hooks 'my-screen-init-hook)
 	(my-screen-load (or
 			(my-file-read (concat my-screen-dir my-screen-current-name-file) t)
 			my-screen-current))
@@ -84,6 +139,7 @@
 	(add-hook 'kill-emacs-hook 'my-screen-save))
 
 (defun my-screen-print-current ()
+	"Print name of current screen."
 	(interactive)
 	(message my-screen-current))
 
