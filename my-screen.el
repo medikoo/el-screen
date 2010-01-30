@@ -27,7 +27,8 @@
 (defgroup my-screen nil "my-screen -- Screen manager for Emacs")
 
 (defcustom my-screen-default-buffer-name "*scratch*"
-	"*Name of a buffer for new screen or if restore of buffer is not possible."
+	"*Default buffer name. It's loaded in new screen or in windows which have
+	problems getting back their buffers."
 	:tag "Name of Default Buffer"
 	:type '(string :size 24)
 	:group 'my-screen)
@@ -130,7 +131,7 @@
 	(my-screen-set-name name))
 
 (defun my-screen-init ()
-	"Initialize. Load screen that was current on exit. Add save hooks."
+	"Initialize. Load previously loaded screen. Add save hooks."
 	(run-hooks 'my-screen-init-hook)
 	(my-screen-load (or
 			(my-file-read (concat my-screen-dir my-screen-current-name-file) t)
