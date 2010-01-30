@@ -145,4 +145,5 @@
 
 (provide 'my-screen/my-screen)
 
+(add-hook 'my-screen-new-hook 'my-frame-reasonable-split)
 (my-screen-init)
