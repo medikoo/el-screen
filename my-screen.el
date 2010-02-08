@@ -20,9 +20,9 @@
 ;;
 ;; See README.
 
-(require 'my/frame)
-(require 'my/file)
-(require 'my/key)
+(require 'my/frame nil t)
+(require 'my/file nil t)
+(require 'my/key nil t)
 
 (defgroup my-screen nil "my-screen -- Screen manager for Emacs")
 
@@ -71,6 +71,18 @@
 (defvar my-screen-current-name-file
 	".myscreen-current"
 	"Filname of file that holds current screen configuration name.")
+
+(defvar my-screen-init-hook nil
+	"Hook that gets run on my-screen initialization.")
+
+(defvar my-screen-load-hook nil
+	"Hook that gets run when previously created screen is loaded.")
+
+(defvar my-screen-new-hook nil
+	"Hook that gets run when new screen is created.")
+
+(defvar my-screen-save-hook nil
+	"Hook that gets run when screen is saved.")
 
 (defun my-screen-set-prefix-key (key)
 	"Set KEY as prefix for my-screen bindings."
@@ -130,6 +142,7 @@
 		(concat my-screen-dir name my-screen-file-extension))
 	(my-screen-set-name name))
 
+;;;###autoload
 (defun my-screen-init ()
 	"Initialize. Load previously loaded screen. Add save hooks."
 	(run-hooks 'my-screen-init-hook)
@@ -147,4 +160,3 @@
 (provide 'my-screen/my-screen)
 
 (add-hook 'my-screen-new-hook 'my-frame-reasonable-split)
-(my-screen-init)

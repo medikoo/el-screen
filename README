@@ -8,6 +8,7 @@ Switchable screen configurations that persists between sessions.
 
 It has nearly same functionality as elscreen
 http://www.morishima.net/~naoto/software/elscreen/
+
 Differences are:
 
 - Configurations are saved to files (this way they're kept between sessions)
@@ -22,12 +23,12 @@ Differences are:
 -------------------------------------------------------------------------------
 
 - Put `my-elisp' helpers (see my other projects) into folder  named 'my' within
-  your .emacs load path.
+  your load path.
 
-- Put `my-screen' folder in same path
+- Put `my-screen' folder in load path
 
 - Create '.my' folder within your '.emacs.d' (you may choose different
-  path, then you'll need to override `my-screen-dir' variable)
+  path but then you'll need to override `my-screen-dir' variable)
 
 -------------------------------------------------------------------------------
 3. Usage
@@ -36,8 +37,9 @@ Differences are:
 -------------------------------------------------------------------------------
 
 (require 'my-screen/my-screen)
+(my-screen-init)
 
-If it's first run then you start with screen named "" (empty string) 
+If it's first run then your current screen is named "" (empty string) 
 otherwise screen that was previously opened is loaded.
 
 -------------------------------------------------------------------------------
@@ -56,7 +58,7 @@ C-z n -- Print name of current screen
 And that's it. Periodical or on exit saving of screens is done automatically.
 
 -------------------------------------------------------------------------------
-3.3 Hooks
+3.3 Available hooks
 -------------------------------------------------------------------------------
 
 my-screen-init-hook
