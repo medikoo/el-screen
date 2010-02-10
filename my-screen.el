@@ -50,10 +50,10 @@
 	:tag "Prefix key of my-screen"
 	:type '(string :size 10)
 	:set (lambda (symbol value)
-				 (if (boundp 'my-screen-prefix-key)
-					 (my-screen-set-prefix-key value)
-					 (my-key-set value my-screen-map))
-				 (custom-set-default symbol value))
+		(if (boundp 'my-screen-prefix-key)
+			(my-screen-set-prefix-key value)
+			(my-key-set value my-screen-map))
+		(custom-set-default symbol value))
 	:group 'my-screen)
 
 (defvar my-screen-dir
@@ -101,8 +101,7 @@
 		(concat my-screen-dir
 			my-screen-current my-screen-file-extension)
 		(prin1-to-string (my-frame-serialize)))
-	(run-hooks 'my-screen-save-hook)
-	(message "Screen saved: %S" my-screen-current))
+	(run-hooks 'my-screen-save-hook))
 
 (defun my-screen-save-as (name)
 	"Save current screen under NAME."
@@ -110,7 +109,7 @@
 	(my-screen-save))
 
 (defun my-screen-new (name)
-	"Prepare new (blank) screen and save as NAME."
+	"Prepare new (blank) screen and save under NAME."
 	(delete-other-windows)
 	(set-window-buffer (selected-window) my-screen-default-buffer-name)
 	(run-hooks 'my-screen-new-hook)
