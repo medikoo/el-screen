@@ -20,9 +20,11 @@
 ;;
 ;; See README.
 
+(require 'my/directory nil t)
 (require 'my/frame nil t)
 (require 'my/file nil t)
 (require 'my/key nil t)
+(require 'my/list nil t)
 
 (defgroup my-screen nil "my-screen -- Screen manager for Emacs")
 
@@ -68,10 +70,6 @@
 	""
 	"Name of current screen configuration.")
 
-(defvar my-screen-current-name-file
-	".myscreen-current"
-	"Filname of file that holds current screen configuration name.")
-
 (defvar my-screen-init-hook nil
 	"Hook that gets run on my-screen initialization.")
 
@@ -91,8 +89,6 @@
 
 (defun my-screen-set-name (name)
 	"Set NAME for current screen."
-	(my-file-write
-		(concat my-screen-dir my-screen-current-name-file) name)
 	(setq my-screen-current name))
 
 (defun my-screen-save ()
@@ -127,11 +123,20 @@
 			(my-screen-new name))
 		(message "Screen loaded: %S" name)))
 
-(defun my-screen-switch (name)
-	"Switch to NAME screen"
-	(interactive "sName: ")
+(defun my-screen-list ()
+	"Return list of screens sorted by modification date."
+	(mapcar (lambda (file) (substring file 0
+				(string-match my-screen-file-extension file)))
+		(my-directory-files-sorted my-screen-dir
+			'my-file-modification-date-sort nil
+			(concat "\\" my-screen-file-extension "$"))))
+
+(defun my-screen-switch ()
+	"Switch to chosen screen."
+	(interactive)
 	(my-screen-save)
-	(my-screen-load name))
+	(my-screen-load (ido-completing-read "Name: "
+			(my-list-move-first-to-end (my-screen-list)))))
 
 (defun my-screen-rename (name)
 	"Rename current screen to NAME."
@@ -143,10 +148,10 @@
 
 ;;;###autoload
 (defun my-screen-init ()
-	"Initialize. Load previously loaded screen. Add save hooks."
+	"Initialize. Load previously loaded screen. Add auto-save hooks."
 	(run-hooks 'my-screen-init-hook)
 	(my-screen-load (or
-			(my-file-read (concat my-screen-dir my-screen-current-name-file) t)
+			(car (my-screen-list))
 			my-screen-current))
 	(add-hook 'auto-save-hook 'my-screen-save)
 	(add-hook 'kill-emacs-hook 'my-screen-save))
