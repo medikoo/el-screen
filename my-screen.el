@@ -107,7 +107,7 @@
 (defun my-screen-new (name)
 	"Prepare new (blank) screen and save under NAME."
 	(delete-other-windows)
-	(set-window-buffer (selected-window) my-screen-default-buffer-name)
+	(switch-to-buffer my-screen-default-buffer-name)
 	(run-hooks 'my-screen-new-hook)
 	(my-screen-save-as name))
 
