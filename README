@@ -8,14 +8,10 @@ Switchable screen configurations that persists between sessions.
 
 It has nearly same functionality as elscreen
 http://www.morishima.net/~naoto/software/elscreen/
-
 Differences are:
-
 - Configurations are saved to files (this way they're kept between sessions)
-
 - There's unlimited number of screen configurations (each has to have
   distinct name)
-
 - No tab controls (I don't think you need them anyway)
 
 -------------------------------------------------------------------------------
@@ -48,10 +44,13 @@ otherwise screen that was previously opened is loaded.
 
 Keyboard bindings:
 
-C-z s <name> -- Switch between screens. Current screen is saved, new screen is
-                loaded
+C-z s <name> -- Switch/load screen. If there is current screen it is saved,
+                new screen is loaded.
 
 C-z r <name> -- Rename current screen.
+
+C-z c -- Unload screen. Save current screen. Stop handling of frame by screen
+         manager.
 
 C-z n -- Print name of current screen
 

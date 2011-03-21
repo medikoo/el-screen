@@ -45,6 +45,7 @@
 	"Keymap for my-screen")
 (define-key my-screen-map "s" 'my-screen-switch)
 (define-key my-screen-map "r" 'my-screen-rename)
+(define-key my-screen-map "c" 'my-screen-unload)
 (define-key my-screen-map "n" 'my-screen-print-current)
 
 (defcustom my-screen-prefix-key "\C-z"
@@ -67,7 +68,7 @@
 	"File extension for screen configurations.")
 
 (defvar my-screen-current
-	""
+	nil
 	"Name of current screen configuration.")
 
 (defvar my-screen-init-hook nil
@@ -89,6 +90,13 @@
 
 (defun my-screen-set-name (name)
 	"Set NAME for current screen."
+	(if my-screen-current
+		(unless name
+			(remove-hook 'auto-save-hook 'my-screen-save)
+			(remove-hook 'kill-emacs-hook 'my-screen-save))
+		(when name
+			(add-hook 'auto-save-hook 'my-screen-save)
+			(add-hook 'kill-emacs-hook 'my-screen-save)))
 	(setq my-screen-current name))
 
 (defun my-screen-save ()
@@ -134,9 +142,21 @@
 (defun my-screen-switch ()
 	"Switch to chosen screen."
 	(interactive)
-	(my-screen-save)
-	(my-screen-load (ido-completing-read "Name: "
-			(my-list-move-first-to-end (my-screen-list)))))
+	(if my-screen-current
+		(my-screen-save))
+	(let ((list (my-screen-list)))
+		(if my-screen-current
+			(setq list (my-list-move-first-to-end list)))
+		(my-screen-load (ido-completing-read "Name: " list))))
+
+(defun my-screen-unload ()
+	"Unloads screen.
+	Preserves frame display, goes back to inital unloaded state."
+	(interactive)
+	(when my-screen-current
+		(my-screen-save)
+		(my-screen-set-name nil))
+	(message "Screen unloaded"))
 
 (defun my-screen-rename (name)
 	"Rename current screen to NAME."
@@ -148,13 +168,8 @@
 
 ;;;###autoload
 (defun my-screen-init ()
-	"Initialize. Load previously loaded screen. Add auto-save hooks."
-	(run-hooks 'my-screen-init-hook)
-	(my-screen-load (or
-			(car (my-screen-list))
-			my-screen-current))
-	(add-hook 'auto-save-hook 'my-screen-save)
-	(add-hook 'kill-emacs-hook 'my-screen-save))
+	"Initialize."
+	(run-hooks 'my-screen-init-hook))
 
 (defun my-screen-print-current ()
 	"Print name of current screen."
