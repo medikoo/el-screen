@@ -35,8 +35,8 @@ Differences are:
 (require 'my-screen/my-screen)
 (my-screen-init)
 
-If it's first run then your current screen is named "" (empty string) 
-otherwise screen that was previously opened is loaded.
+To load existing screen or to start new screen session press C-z s and provide
+screen name.
 
 -------------------------------------------------------------------------------
 3.2 Interaction
