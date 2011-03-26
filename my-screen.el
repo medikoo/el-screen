@@ -121,15 +121,17 @@
 
 (defun my-screen-load (name)
 	"Load NAME screen."
-	(let ((data (my-file-read (concat my-screen-dir
-						name my-screen-file-extension) t)))
-		(if data
-			(progn
-				(my-frame-unserialize (read data))
-				(my-screen-set-name name)
-				(run-hooks 'my-screen-load-hook))
-			(my-screen-new name))
-		(message "Screen loaded: %S" name)))
+	(if name
+		(let ((data (my-file-read (concat my-screen-dir
+							name my-screen-file-extension) t)))
+			(if data
+				(progn
+					(my-frame-unserialize (read data))
+					(my-screen-set-name name)
+					(run-hooks 'my-screen-load-hook))
+				(my-screen-new name))
+			(message "Screen loaded: %S" name))
+		(message "Please provide name for a screen")))
 
 (defun my-screen-list ()
 	"Return list of screens sorted by modification date."
@@ -174,7 +176,9 @@
 (defun my-screen-print-current ()
 	"Print name of current screen."
 	(interactive)
-	(message my-screen-current))
+	(message (if my-screen-current
+			my-screen-current
+			"No screen loaded")))
 
 (provide 'my-screen/my-screen)
 
