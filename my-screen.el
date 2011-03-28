@@ -70,7 +70,8 @@
 	"File extension for screen configurations.")
 
 (defvar my-screen-help-file
-	(concat (file-name-directory (buffer-file-name)) "HELP")
+	(concat (or (file-name-directory
+				(or load-file-name (buffer-file-name) "")) "") "HELP")
 	"Path to my-screen help file")
 
 (defvar my-screen-current
