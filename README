@@ -49,10 +49,14 @@ C-z s <name> -- Switch/load screen. If there is current screen it is saved,
 
 C-z r <name> -- Rename current screen.
 
+C-z d -- Delete current screen.
+
 C-z c -- Unload screen. Save current screen. Stop handling of frame by screen
          manager.
 
 C-z n -- Print name of current screen
+
+C-z h -- Show help (list all keyboard bindings)
 
 And that's it. Periodical or on exit saving of screens is done automatically.
 

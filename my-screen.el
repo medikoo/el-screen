@@ -1,7 +1,7 @@
 ;; my-screen.el --- Screen manager for Emacs
 
 ;; Author:	Mariusz Nowak <mariusz+emacs.my-screen@medikoo.com>
-;; Copyright (C) 2010 Mariusz Nowak <mariusz+emacs.my-screen@medikoo.com>
+;; Copyright (C) 2010, 2011 Mariusz Nowak <mariusz+emacs.my-screen@medikoo.com>
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -45,8 +45,10 @@
 	"Keymap for my-screen")
 (define-key my-screen-map "s" 'my-screen-switch)
 (define-key my-screen-map "r" 'my-screen-rename)
+(define-key my-screen-map "d" 'my-screen-delete)
 (define-key my-screen-map "c" 'my-screen-unload)
 (define-key my-screen-map "n" 'my-screen-print-current)
+(define-key my-screen-map "h" 'my-screen-help)
 
 (defcustom my-screen-prefix-key "\C-z"
 	"*Prefix key for my-screen commands."
@@ -66,6 +68,10 @@
 (defvar my-screen-file-extension
 	".myscreen"
 	"File extension for screen configurations.")
+
+(defvar my-screen-help-file
+	(concat (file-name-directory (buffer-file-name)) "HELP")
+	"Path to my-screen help file")
 
 (defvar my-screen-current
 	nil
@@ -167,6 +173,22 @@
 		(concat my-screen-dir my-screen-current my-screen-file-extension)
 		(concat my-screen-dir name my-screen-file-extension))
 	(my-screen-set-name name))
+
+(defun my-screen-delete ()
+	"Deletes current screen. No new screen is loaded."
+	(interactive)
+	(if (y-or-n-p "Are you sure ? ")
+		(let ((name my-screen-current))
+		 (my-screen-set-name nil)
+		 (delete-file
+			 (concat my-screen-dir name my-screen-file-extension))
+		 (message "Screen %S deleted" name))
+	 (message "")))
+
+(defun my-screen-help ()
+	"Shows help."
+	(interactive)
+	(with-help-window (help-buffer) (princ (my-file-read my-screen-help-file))))
 
 ;;;###autoload
 (defun my-screen-init ()
