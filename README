@@ -21,7 +21,7 @@ Differences are:
 - Put `my-elisp' helpers (see my other projects) into folder  named 'my' within
   your load path.
 
-- Put `my-screen' folder in load path
+- Put `my-screen' project into your load path
 
 - Create '.my' folder within your '.emacs.d' (you may choose different
   path but then you'll need to override `my-screen-dir' variable)
@@ -35,8 +35,8 @@ Differences are:
 (require 'my-screen/my-screen)
 (my-screen-init)
 
-To load existing screen or to start new screen session press C-z s and provide
-screen name.
+To load existing screen or to start new screen session press C-z s and input
+name.
 
 -------------------------------------------------------------------------------
 3.2 Interaction
@@ -44,15 +44,15 @@ screen name.
 
 Keyboard bindings:
 
-C-z s <name> -- Switch/load screen. If there is current screen it is saved,
-                new screen is loaded.
+C-z s <name> -- Switch (to new or saved) screen in current frame.
+
+C-z o <name> -- Load (new or saved) screen into new frame.
 
 C-z r <name> -- Rename current screen.
 
 C-z d -- Delete current screen.
 
-C-z c -- Unload screen. Save current screen. Stop handling of frame by screen
-         manager.
+C-z c -- Unload screen. Save current screen and stop managing frame.
 
 C-z n -- Print name of current screen
 
