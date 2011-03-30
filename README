@@ -4,7 +4,7 @@ my-screen --- Screen manager for Emacs
 1. About
 -------------------------------------------------------------------------------
 
-Switchable screen configurations that persists between sessions.
+Switchable window-configurations that persist between sessions.
 
 It has nearly same functionality as elscreen
 http://www.morishima.net/~naoto/software/elscreen/
