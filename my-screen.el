@@ -1,4 +1,4 @@
-;; my-screen.el --- Screen manager for Emacs
+;; my-screen.el --- Window configurations manager for Emacs
 
 ;; Author:	Mariusz Nowak <mariusz+emacs.my-screen@medikoo.com>
 ;; Copyright (C) 2010, 2011 Mariusz Nowak <mariusz+emacs.my-screen@medikoo.com>
@@ -26,7 +26,7 @@
 (require 'my/key nil t)
 (require 'my/list nil t)
 
-(defgroup my-screen nil "my-screen -- Screen manager for Emacs")
+(defgroup my-screen nil "my-screen -- Window configurations manager for Emacs")
 
 (defcustom my-screen-default-buffer-name "*scratch*"
 	"*Default buffer name. It's loaded in new screen or in windows which have
@@ -157,11 +157,12 @@
 		(prin1-to-string (my-frame-serialize (cdr screen-assoc))))
 	(run-hooks 'my-screen-save-hook))
 
-(defun my-screen-new (name)
-	"Prepare new (blank) screen in current frame and save it under NAME."
-	(delete-other-windows)
-	(switch-to-buffer my-screen-default-buffer-name)
-	(run-hooks 'my-screen-new-hook)
+(defun my-screen-new (name dosweep)
+	"If DOSWEEP prepare (blank) frame. Save selected frame configuration to NAME."
+	(when dosweep
+		(delete-other-windows)
+		(switch-to-buffer my-screen-default-buffer-name)
+		(run-hooks 'my-screen-new-hook))
 	(my-screen-save (my-screen-set name (selected-frame))))
 
 (defun my-screen-load (name &optional frame)
@@ -172,14 +173,15 @@
 		(if screen-assoc
 			(select-frame-set-input-focus (cdr screen-assoc))
 			(let ((data (my-file-read (concat my-screen-dir
-								(symbol-name name) my-screen-file-extension) t)))
+								(symbol-name name) my-screen-file-extension) t))
+					(dosweep (or (my-screen-get-current) (not frame))))
 				(unless frame
 					(setq frame (make-frame-command)))
 				(if data
 					(progn (ignore-errors (my-frame-unserialize (read data) frame))
 						(my-screen-save (my-screen-set name frame))
 						(run-hooks 'my-screen-load-hook))
-					(my-screen-new name))
+					(my-screen-new name dosweep))
 				(message (concat "Screen loaded: " (symbol-name name)))))))
 
 (defun my-screen-list ()
