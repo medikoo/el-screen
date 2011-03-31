@@ -76,10 +76,6 @@
 				(or load-file-name (buffer-file-name) "")) "") "HELP")
 	"Path to my-screen help file")
 
-(defvar my-screen-current
-	nil
-	"Name of current screen configuration.")
-
 (defvar my-screen-frame-map
 	()
 	"Screen to frame mappings")
