@@ -49,6 +49,7 @@
 (define-key my-screen-key-map "d" 'my-screen-delete)
 (define-key my-screen-key-map "c" 'my-screen-unload)
 (define-key my-screen-key-map "n" 'my-screen-print-current)
+(define-key my-screen-key-map "w" 'my-screen-wipe-interactive)
 (define-key my-screen-key-map "h" 'my-screen-help)
 
 (defcustom my-screen-prefix-key "\C-z"
@@ -89,8 +90,8 @@
 (defvar my-screen-load-hook nil
 	"Hook that gets run when previously created screen is loaded.")
 
-(defvar my-screen-new-hook nil
-	"Hook that gets run when new screen is created.")
+(defvar my-screen-wipe-hook nil
+	"Hook that gets run when frame is cleared.")
 
 (defvar my-screen-save-hook nil
 	"Hook that gets run when screen is saved.")
@@ -157,13 +158,11 @@
 		(prin1-to-string (my-frame-serialize (cdr screen-assoc))))
 	(run-hooks 'my-screen-save-hook))
 
-(defun my-screen-new (name dosweep)
-	"If DOSWEEP prepare (blank) frame. Save selected frame configuration to NAME."
-	(when dosweep
-		(delete-other-windows)
-		(switch-to-buffer my-screen-default-buffer-name)
-		(run-hooks 'my-screen-new-hook))
-	(my-screen-save (my-screen-set name (selected-frame))))
+(defun my-screen-wipe ()
+	"Clears selected frame."
+	(delete-other-windows)
+	(switch-to-buffer my-screen-default-buffer-name)
+	(run-hooks 'my-screen-wipe-hook))
 
 (defun my-screen-load (name &optional frame)
 	"Load NAME screen into FRAME.
@@ -174,14 +173,16 @@
 			(select-frame-set-input-focus (cdr screen-assoc))
 			(let ((data (my-file-read (concat my-screen-dir
 								(symbol-name name) my-screen-file-extension) t))
-					(dosweep (or (my-screen-get-current) (not frame))))
+					(dowipe (or (my-screen-get-current) (not frame))))
 				(unless frame
 					(setq frame (make-frame-command)))
 				(if data
 					(progn (ignore-errors (my-frame-unserialize (read data) frame))
 						(my-screen-save (my-screen-set name frame))
 						(run-hooks 'my-screen-load-hook))
-					(my-screen-new name dosweep))
+					(if dowipe
+						(my-screen-wipe))
+					(my-screen-save (my-screen-set name (selected-frame))))
 				(message (concat "Screen loaded: " (symbol-name name)))))))
 
 (defun my-screen-list ()
@@ -256,7 +257,8 @@
 	(interactive)
 	(let ((screen-current (my-screen-get-current)))
 		(if screen-current
-			(if (y-or-n-p "Are you sure ? ")
+			(if (y-or-n-p (concat "Do you really want to delete '"
+						(symbol-name screen-current) "' ? "))
 				(progn (my-screen-set nil (selected-frame))
 					(delete-file
 						(concat my-screen-dir (symbol-name screen-current)
@@ -266,6 +268,14 @@
 				(message ""))
 			(message "No screen loaded"))))
 
+(defun my-screen-wipe-interactive ()
+	"Interactive wrapper for `my-screen-wipe"
+	(interactive)
+	(when (y-or-n-p "Are you sure ? ")
+		(my-screen-wipe)
+		(my-screen-save-current))
+	(message ""))
+
 (defun my-screen-help ()
 	"Shows help."
 	(interactive)
@@ -274,7 +284,7 @@
 ;;;###autoload
 (defun my-screen-init ()
 	"Initialize."
-	(add-hook 'my-screen-new-hook 'my-frame-reasonable-split)
+	(add-hook 'my-screen-wipe-hook 'my-frame-reasonable-split)
 	(run-hooks 'my-screen-init-hook)
 	(if delete-frame-functions
 		(nconc delete-frame-functions '(my-screen-unset))
