@@ -63,10 +63,6 @@
 		(custom-set-default symbol value))
 	:group 'my-screen)
 
-(defvar my-screen-dir
-	(concat (getenv "HOME") "/.emacs.d/.my/")
-	"Directory to save screens in.")
-
 (defvar my-screen-file-extension
 	".myscreen"
 	"File extension for screen configurations.")
@@ -80,17 +76,8 @@
 	()
 	"Screen to frame mappings")
 
-(defvar my-screen-init-hook nil
-	"Hook that gets run on my-screen initialization.")
-
-(defvar my-screen-load-hook nil
-	"Hook that gets run when previously created screen is loaded.")
-
 (defvar my-screen-wipe-hook nil
 	"Hook that gets run when frame is cleared.")
-
-(defvar my-screen-save-hook nil
-	"Hook that gets run when screen is saved.")
 
 (defun my-screen-set-prefix-key (key)
 	"Set KEY as prefix for my-screen bindings."
@@ -151,8 +138,7 @@
 	(my-file-write
 		(concat my-screen-dir
 			(symbol-name (car screen-assoc)) my-screen-file-extension)
-		(prin1-to-string (my-frame-serialize (cdr screen-assoc))))
-	(run-hooks 'my-screen-save-hook))
+		(prin1-to-string (my-frame-serialize (cdr screen-assoc)))))
 
 (defun my-screen-wipe ()
 	"Clears selected frame."
@@ -174,8 +160,7 @@
 					(setq frame (make-frame-command)))
 				(if data
 					(progn (ignore-errors (my-frame-unserialize (read data) frame))
-						(my-screen-save (my-screen-set name frame))
-						(run-hooks 'my-screen-load-hook))
+						(my-screen-save (my-screen-set name frame)))
 					(if dowipe
 						(my-screen-wipe))
 					(my-screen-save (my-screen-set name (selected-frame))))
@@ -281,7 +266,6 @@
 (defun my-screen-init ()
 	"Initialize."
 	(add-hook 'my-screen-wipe-hook 'my-frame-reasonable-split)
-	(run-hooks 'my-screen-init-hook)
 	(if delete-frame-functions
 		(nconc delete-frame-functions '(my-screen-unset))
 		(setq delete-frame-functions '(my-screen-unset))))

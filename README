@@ -66,16 +66,6 @@ And that's it. Periodical or on exit saving of screens is done automatically.
 3.3 Available hooks
 -------------------------------------------------------------------------------
 
-my-screen-init-hook
-  Initialization, may become handy if you want to override some default
-  settings e.g. `my-screen-dir'
-
-my-screen-load-hook
-  Previously created screen is loaded
-
-my-screen-new-hook
-  New screen is created, you may use it to organize your init screen
-  configuration.
-
-my-screen-save-hook
-  Screen is saved
+my-screen-wipe-hook
+  Frame is cleared. Happens when new screen is opened or invoked manualy.
+  With this hook you may setup initial frame configuration.
