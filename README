@@ -60,7 +60,7 @@ C-z w -- Clear selected frame
 
 C-z h -- Show help (list all keyboard bindings)
 
-And that's it. Periodical or on exit saving of screens is done automatically.
+Periodical or on exit saving of screens is done automatically.
 
 -------------------------------------------------------------------------------
 3.3 Available hooks
