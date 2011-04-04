@@ -1,11 +1,34 @@
-my-screen keyboard bindings:
+el-screen keyboard bindings:
 
-C-z s <name>  - Switch screen in current frame
-C-z o <name>  - Load screen into new frame
-C-z r <name>  - Rename current screen
-C-z d         - Delete current screen
-C-z c         - Unload screen
-C-z n         - Print name of current screen
-C-z w         - Clear selected frame
+C-z c <name>  - Switch configuration in current frame
+C-z ' <name>
 
-C-z h         - Show this help
+C-z o <name>  - Load configuration into new frame
+
+C-z 0...9     - Switch to configuration number 0...9
+
+C-z "         - List all loaded and saved configurations.
+C-z w           You can rename and delete items in list
+
+C-z C-a       - Toggle to configuration displayed previously
+
+C-z <SPC>			- Switch to next loaded configuration
+C-z n
+
+C-z <DEL>			- Switch to previous loaded configuration
+C-z p
+
+C-z i					- Print name of current configuration
+C-z N
+
+C-z A         - Rename current configuration
+
+C-z C         - Clear current configuration
+
+C-z d         - Unload current configuration
+C-z k
+C-z C-z
+
+C-z C-\       - Unload all loaded screens (reset el-screen)
+
+C-z ?         - Show this help

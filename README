@@ -1,30 +1,29 @@
-my-screen --- Screen manager for Emacs
+el-screen --- Window configurations manager for Emacs
 
 -------------------------------------------------------------------------------
 1. About
 -------------------------------------------------------------------------------
 
-Switchable window configurations that persist between sessions.
-
-It has nearly same functionality as elscreen
+Based on GNU Screen http://www.gnu.org/software/screen/
+and similar Emacs implementation - elscreen
 http://www.morishima.net/~naoto/software/elscreen/
-Differences are:
-- Configurations are saved to files (this way they're kept between sessions)
-- There's unlimited number of screen configurations (each has to have
-  distinct name)
-- No tab controls (I don't think you need them anyway)
+
+Switchable window configurations. Difference from GNU Screen is that each
+configuration needs to be named. Other notable feature is that
+configurations are kept in files and persist between Emacs sessions.
 
 -------------------------------------------------------------------------------
 2. Installation
 -------------------------------------------------------------------------------
 
-- Put `my-elisp' helpers (see my other projects) into folder  named 'my' within
-  your load path.
+- Put my following projects within your load path:
+	my-elisp into 'my' folder
+	el-index into 'el-index' folder
 
-- Put `my-screen' project into your load path
+- Put `el-screen' project into 'my-screen' folder in your load path
 
-- Create '.my' folder within your '.emacs.d' (you may choose different
-  path but then you'll need to override `my-screen-dir' variable)
+- Create '.elscreen' folder within your '.emacs.d' (you may choose different
+  path but then you need to reflect that with `el-screen-dir' variable)
 
 -------------------------------------------------------------------------------
 3. Usage
@@ -32,40 +31,23 @@ Differences are:
 3.1 Initialization
 -------------------------------------------------------------------------------
 
-(require 'my-screen/my-screen)
-(my-screen-init)
+(require 'my-screen/el-screen)
+(el-screen-init)
 
-To load existing screen or to start new screen session press C-z s and input
+To load existing screen or to start new screen session press C-z c and input
 name.
 
 -------------------------------------------------------------------------------
 3.2 Interaction
 -------------------------------------------------------------------------------
 
-Keyboard bindings:
-
-C-z s <name> -- Switch (to new or saved) screen in current frame.
-
-C-z o <name> -- Load (new or saved) screen into new frame.
-
-C-z r <name> -- Rename current screen.
-
-C-z d -- Delete current screen.
-
-C-z c -- Unload screen. Save current screen and stop managing frame.
-
-C-z n -- Print name of current screen
-
-C-z w -- Clear selected frame
-
-C-z h -- Show help (list all keyboard bindings)
-
-Periodical or on exit saving of screens is done automatically.
+For keyboard bindings see HELP
+Periodical or on exit save of configurations is done automatically.
 
 -------------------------------------------------------------------------------
 3.3 Available hooks
 -------------------------------------------------------------------------------
 
-my-screen-wipe-hook
+el-screen-clear-hook
   Frame is cleared. Happens when new screen is opened or invoked manualy.
   With this hook you may setup initial frame configuration.
