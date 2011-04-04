@@ -470,4 +470,4 @@
 			(nconc delete-frame-functions '(el-screen-unset))
 			(setq delete-frame-functions '(el-screen-unset)))))
 
-(provide 'my-screen/el-screen)
+(provide 'el-screen/el-screen)

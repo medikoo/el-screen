@@ -20,7 +20,7 @@ configurations are kept in files and persist between Emacs sessions.
 	my-elisp into 'my' folder
 	el-index into 'el-index' folder
 
-- Put `el-screen' project into 'my-screen' folder in your load path
+- Put `el-screen' project into 'el-screen' folder in your load path
 
 - Create '.elscreen' folder within your '.emacs.d' (you may choose different
   path but then you need to reflect that with `el-screen-dir' variable)
@@ -31,7 +31,7 @@ configurations are kept in files and persist between Emacs sessions.
 3.1 Initialization
 -------------------------------------------------------------------------------
 
-(require 'my-screen/el-screen)
+(require 'el-screen/el-screen)
 (el-screen-init)
 
 To load existing screen or to start new screen session press C-z c and input
