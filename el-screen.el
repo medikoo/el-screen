@@ -20,11 +20,11 @@
 ;;
 ;; See README.
 
-(require 'my/directory nil t)
-(require 'my/frame nil t)
-(require 'my/file nil t)
-(require 'my/key nil t)
-(require 'my/list nil t)
+(require 'el-kit/directory nil t)
+(require 'el-kit/frame nil t)
+(require 'el-kit/file nil t)
+(require 'el-kit/key nil t)
+(require 'el-kit/list nil t)
 (require 'el-index/el-index)
 
 (defgroup el-screen nil "el-screen -- Window configurations manager for Emacs")
@@ -116,13 +116,13 @@
 	:set (lambda (symbol value)
 		(if (boundp 'el-screen-prefix-key)
 			(el-screen-set-prefix-key value)
-			(my-key-set value el-screen-key-map))
+			(el-kit-key-set value el-screen-key-map))
 		(custom-set-default symbol value))
 	:group 'el-screen)
 
 (defun el-screen-set-prefix-key (key)
 	"Set KEY as prefix for el-screen bindings."
-	(my-key-replace el-screen-prefix-key key el-screen-key-map)
+	(el-kit-key-replace el-screen-prefix-key key el-screen-key-map)
 	(setq el-screen-prefix-key key))
 
 (defvar el-screen-help-file
@@ -215,10 +215,10 @@
 
 (defun el-screen-save (config-assoc)
 	"Save CONFIG-ASSOC to file."
-	(my-file-write
+	(el-kit-file-write
 		(concat el-screen-dir
 			(symbol-name (car config-assoc)) el-screen-file-extension)
-		(prin1-to-string (my-frame-serialize (cdr config-assoc)))))
+		(prin1-to-string (el-kit-frame-serialize (cdr config-assoc)))))
 
 (defun el-screen-save-all ()
 	"Save configurations for all open frames."
@@ -234,14 +234,14 @@
 			(progn
 				(select-frame-set-input-focus (cdr screen-assoc))
 				(el-screen-add-to-loaded-list name))
-			(let ((data (my-file-read (concat el-screen-dir
+			(let ((data (el-kit-file-read (concat el-screen-dir
 								(symbol-name name) el-screen-file-extension) t))
 					(doclear (or (el-screen-get-current) (not frame))))
 				(unless frame
 					(setq frame (make-frame-command)))
 				(if data
 					(progn
-						(ignore-errors (my-frame-unserialize (read data) frame))
+						(ignore-errors (el-kit-frame-unserialize (read data) frame))
 						(el-screen-save (el-screen-set name frame)))
 					(if doclear
 						(el-screen-clear))
@@ -252,8 +252,8 @@
 	"Return list of saved configurations sorted by modification date."
 	(mapcar (lambda (file) (substring file 0
 				(string-match el-screen-file-extension file)))
-		(my-directory-files-sorted el-screen-dir
-			'my-file-modification-date-sort nil
+		(el-kit-directory-files-sorted el-screen-dir
+			'el-kit-file-modification-date-sort nil
 			(concat "\\" el-screen-file-extension "$"))))
 
 (defun el-screen-ido-list ()
@@ -304,13 +304,13 @@
 	"Switch to next configuration."
 	(interactive)
 	(el-screen-switch-by-func (lambda (current)
-			(my-list-next el-screen-loaded-list current t))))
+			(el-kit-list-next el-screen-loaded-list current t))))
 
 (defun el-screen-switch-previous ()
 	"Switch to previous configuration."
 	(interactive)
 	(el-screen-switch-by-func (lambda (current)
-			(my-list-previous el-screen-loaded-list current t))))
+			(el-kit-list-previous el-screen-loaded-list current t))))
 
 (defun el-screen-switch-to-number (num)
 	"Switch to configuration number NUM."
@@ -367,8 +367,8 @@
 			(rename-file
 				(concat el-screen-dir (symbol-name oldname) el-screen-file-extension)
 				(concat el-screen-dir newname el-screen-file-extension))
-			(my-list-replace el-screen-loaded-list oldname (intern newname))
-			(my-list-replace el-screen-loaded-ring oldname (intern newname))
+			(el-kit-list-replace el-screen-loaded-list oldname (intern newname))
+			(el-kit-list-replace el-screen-loaded-ring oldname (intern newname))
 			(let ((frame (cdr (assoc oldname el-screen-frame-map))))
 				(if frame
 					(el-screen-set (intern newname) frame)))
@@ -442,7 +442,7 @@
 
 (defvar el-screen-index-actions
 	'((write . (lambda (name)
-				(let ((index (my-list-index-of el-screen-loaded-list name)))
+				(let ((index (el-kit-list-index-of el-screen-loaded-list name)))
 					(if index
 						(insert (if (< index 10)
 								(concat (int-to-string (mod (+ 1 index) 10))) " ") " "))
@@ -458,14 +458,14 @@
 (defun el-screen-help ()
 	"Shows help."
 	(interactive)
-	(with-help-window (help-buffer) (princ (my-file-read el-screen-help-file))))
+	(with-help-window (help-buffer) (princ (el-kit-file-read el-screen-help-file))))
 
 ;;;###autoload
 (defun el-screen-init ()
 	"Initialize."
 	(unless el-screen-initialized?
 		(setq el-screeen-initialized? t)
-		(add-hook 'el-screen-clear-hook 'my-frame-reasonable-split)
+		(add-hook 'el-screen-clear-hook 'el-kit-frame-reasonable-split)
 		(if delete-frame-functions
 			(nconc delete-frame-functions '(el-screen-unset))
 			(setq delete-frame-functions '(el-screen-unset)))))

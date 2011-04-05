@@ -17,7 +17,7 @@ configurations are kept in files and persist between Emacs sessions.
 -------------------------------------------------------------------------------
 
 - Put my following projects within your load path:
-	my-elisp into 'my' folder
+	el-kit into 'el-kit' folder
 	el-index into 'el-index' folder
 
 - Put `el-screen' project into 'el-screen' folder in your load path
