@@ -379,7 +379,7 @@
 	(let ((screen-current (el-screen-get-current)))
 		(if screen-current
 			(let ((name (read-from-minibuffer
-							(concat "New name for '" screen-current "': "))))
+							(concat "New name for '" (symbol-name screen-current) "': "))))
 				(if (el-screen-rename screen-current name)
 					(message (concat "Configuration renamed to: " name))))
 			(message "No configuration loaded"))))
