@@ -248,11 +248,10 @@
 
 (defun el-screen-list ()
 	"Return list of saved configurations sorted by modification date."
-	(mapcar (lambda (file) (substring file 0
-				(string-match el-screen-file-extension file)))
-		(el-kit-directory-files-sorted el-screen-dir
-			'el-kit-file-modification-date-sort nil
-			(concat "\\" el-screen-file-extension "$"))))
+	(el-kit-directory-files el-screen-dir
+		(concat "\\" el-screen-file-extension "$")
+		'el-kit-file-modification-date-sort
+		'el-kit-file-name-nondirectory-sans-extension))
 
 (defun el-screen-ido-list ()
 	"Return list of saved configurations with selected one moved to end of list."
