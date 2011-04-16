@@ -185,9 +185,7 @@
 	"Add NAME configuration to loaded list and ring."
 	(setq el-screen-loaded-ring (cons name (delq name el-screen-loaded-ring)))
 	(if (not (memql name el-screen-loaded-list))
-		(if el-screen-loaded-list
-			(nconc el-screen-loaded-list (list name))
-			(setq el-screen-loaded-list (list name)))))
+		(setq el-screen-loaded-list (nconc el-screen-loaded-list (list name)))))
 
 (defun el-screen-unset (frame)
 	"Unloads configuration from given FRAME."
@@ -466,8 +464,7 @@
 	(unless el-screen-initialized?
 		(setq el-screeen-initialized? t)
 		(add-hook 'el-screen-clear-hook 'el-kit-frame-reasonable-split)
-		(if delete-frame-functions
-			(nconc delete-frame-functions '(el-screen-unset))
-			(setq delete-frame-functions '(el-screen-unset)))))
+		(setq delete-frame-functions
+			(nconc delete-frame-functions '(el-screen-unset)))))
 
 (provide 'el-screen/el-screen)
