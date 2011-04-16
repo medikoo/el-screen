@@ -25,7 +25,7 @@
 (require 'el-kit/file nil t)
 (require 'el-kit/key nil t)
 (require 'el-kit/list nil t)
-(require 'el-index/el-index)
+(require 'el-index/el-index nil t)
 
 (defgroup el-screen nil "el-screen -- Window configurations manager for Emacs")
 
