@@ -16,7 +16,7 @@ configurations are kept in files and persist between Emacs sessions.
 2. Installation
 -------------------------------------------------------------------------------
 
-- Put my following projects within your load path:
+- Put following projects (see my page on github) within your load path:
 	el-kit into 'el-kit' folder
 	el-index into 'el-index' folder
 
