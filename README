@@ -51,3 +51,7 @@ Periodical or on exit save of configurations is done automatically.
 el-screen-clear-hook
   Frame is cleared. Happens when new screen is opened or invoked manualy.
   With this hook you may setup initial frame configuration.
+
+el-screen-switch-before-hook
+	Run before new configuration is loaded. By default `save-sume-buffers' is
+	added.

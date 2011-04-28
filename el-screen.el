@@ -151,6 +151,9 @@
 (defvar el-screen-clear-hook nil
 	"Hook that gets run when frame is cleared.")
 
+(defvar el-screen-switch-before-hook nil
+	"Hook that gets run before configuration is switched.")
+
 (defun el-screen-set (name frame)
 	"Assign NAME configuration for given FRAME.
 	If NAME is nil then unload configuration from given FRAME."
@@ -229,9 +232,12 @@
 	If configuration is already loaded focus its frame."
 	(let ((screen-assoc (assoc name el-screen-frame-map)))
 		(if screen-assoc
-			(progn
+			(when (not (eq screen-assoc
+						(rassoc (selected-frame) el-screen-frame-map)))
+				(run-hooks 'el-screen-switch-before-hook)
 				(select-frame-set-input-focus (cdr screen-assoc))
 				(el-screen-add-to-loaded-list name))
+			(run-hooks 'el-screen-switch-before-hook)
 			(let ((data (el-kit-file-read (concat el-screen-dir
 								(symbol-name name) el-screen-file-extension) t))
 					(doclear (or (el-screen-get-current) (not frame))))
@@ -463,6 +469,7 @@
 	(unless el-screen-initialized?
 		(setq el-screeen-initialized? t)
 		(add-hook 'el-screen-clear-hook 'el-kit-frame-reasonable-split)
+		(add-hook 'el-screen-switch-before-hook 'save-some-buffers)
 		(setq delete-frame-functions
 			(nconc delete-frame-functions '(el-screen-unset)))))
 
