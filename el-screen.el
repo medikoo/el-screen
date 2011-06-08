@@ -46,6 +46,17 @@
 	".elscreen"
 	"File extension for screen configurations.")
 
+(defvar el-screen-frame-title-cache nil
+	"Cached method that sets frame title")
+
+(defvar el-screen-frame-title
+	'(:eval
+		(let ((name (el-screen-get-current)))
+			(if name
+				(symbol-name name)
+				"*none*")))
+	"Method that sets frame title to screen name")
+
 (defvar el-screen-key-map (make-sparse-keymap)
 	"Keymap for el-screen")
 
@@ -461,7 +472,20 @@
 (defun el-screen-help ()
 	"Shows help."
 	(interactive)
-	(with-help-window (help-buffer) (princ (el-kit-file-read el-screen-help-file))))
+	(with-help-window (help-buffer)
+		(princ (el-kit-file-read el-screen-help-file))))
+
+(defun el-screen-set-frame-title ()
+	"Sets frame title format to current screen name."
+	(unless el-screen-frame-title-cache
+		(setq el-screen-frame-title-cache frame-title-format)
+		(setq frame-title-format el-screen-frame-title)))
+
+(defun el-screen-unset-frame-title ()
+	"Reverts frame title format to previous setting."
+	(when el-screen-frame-title-cache
+		(setq frame-title-format el-screen-frame-title-cache)
+		(setq el-screen-frame-title-cache nil)))
 
 ;;;###autoload
 (defun el-screen-init ()
