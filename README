@@ -17,8 +17,8 @@ configurations are kept in files and persist between Emacs sessions.
 -------------------------------------------------------------------------------
 
 - Put following projects (see my page on github) within your load path:
-	el-kit into 'el-kit' folder
-	el-index into 'el-index' folder
+  el-kit into 'el-kit' folder
+  el-index into 'el-index' folder
 
 - Put `el-screen' project into 'el-screen' folder in your load path
 
@@ -53,5 +53,5 @@ el-screen-clear-hook
   With this hook you may setup initial frame configuration.
 
 el-screen-switch-before-hook
-	Run before new configuration is loaded. By default `save-sume-buffers' is
-	added.
+  Run before new configuration is loaded. By default `save-some-buffers' is
+  added.
