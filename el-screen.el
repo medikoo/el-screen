@@ -491,7 +491,7 @@
 (defun el-screen-init ()
 	"Initialize."
 	(unless el-screen-initialized?
-		(setq el-screeen-initialized? t)
+		(setq el-screen-initialized? t)
 		(add-hook 'el-screen-clear-hook 'el-kit-frame-reasonable-split)
 		(add-hook 'el-screen-switch-before-hook 'save-some-buffers)
 		(setq delete-frame-functions
