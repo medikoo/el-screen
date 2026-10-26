@@ -20,6 +20,7 @@
 ;;
 ;; See README.
 
+(require 'cl-lib)
 (require 'el-kit/directory nil t)
 (require 'el-kit/frame nil t)
 (require 'el-kit/file nil t)
@@ -339,7 +340,7 @@
 	(if el-screen-loaded-ring
 		(if (el-screen-get-current)
 			(if (> (length el-screen-loaded-ring) 1)
-				(el-screen-load (second el-screen-loaded-ring) (selected-frame)))
+				(el-screen-load (cl-second el-screen-loaded-ring) (selected-frame)))
 			(el-screen-load (car el-screen-loaded-ring) (selected-frame)))))
 
 (defun el-screen-unload ()
